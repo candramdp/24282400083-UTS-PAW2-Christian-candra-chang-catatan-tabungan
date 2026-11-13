@@ -1,42 +1,65 @@
-# REST API Manajemen Data Peralatan Olahraga
+# REST API Catatan Tabungan
 
-REST API CRUD menggunakan Node.js, Express, dan MongoDB.
+Project Express.js menggunakan ES Modules, MongoDB Atlas, Mongoose, dan Zod untuk mengelola catatan tabungan.
 
-## Struktur
-- `server.js`: server dan koneksi MongoDB
-- `models/Alat.js`: skema data peralatan
-- `routes/alatRoutes.js`: endpoint CRUD
-- `.env.example`: contoh konfigurasi
+## Field studi kasus
 
-## Menjalankan
-1. Install Node.js dan siapkan MongoDB lokal atau MongoDB Atlas.
-2. Jalankan `npm install`.
-3. Salin `.env.example` menjadi `.env` dan isi `MONGODB_URI`.
-4. Jalankan `npm start`.
-5. Buka `http://localhost:3000`.
+| Field | Tipe | Keterangan |
+|---|---|---|
+| saving_date | Date | Tanggal menabung, wajib diisi |
+| amount | Number | Jumlah tabungan, wajib dan harus lebih dari 0 |
+| notes | String | Catatan/keterangan, opsional |
 
-## Data
-- `nama_alat`: string, wajib
-- `kategori`: string, wajib
-- `stok`: angka, minimal 0
-- `harga`: angka, minimal 0
+MongoDB akan menambahkan `_id` dan `__v` secara otomatis.
 
-## Endpoint
+## Persiapan
+
+1. Install Node.js.
+2. Buat cluster dan database `catatan_tabungan` di MongoDB Atlas.
+3. Salin file `.env.example` menjadi `.env`.
+4. Isi `MONGODB_URI` pada `.env` dengan connection string Atlas milik sendiri. Ganti username, password, dan alamat cluster. Jangan unggah file `.env` ke GitHub.
+5. Jalankan `npm install`.
+6. Jalankan `npm run dev` atau `npm start`.
+7. Buka `http://localhost:3000`.
+
+## Endpoint REST API
+
 | Method | Endpoint | Fungsi |
 |---|---|---|
-| GET | `/api/alat` | Lihat semua peralatan |
-| GET | `/api/alat/:id` | Lihat detail |
-| POST | `/api/alat` | Tambah peralatan |
-| PUT | `/api/alat/:id` | Edit peralatan |
-| DELETE | `/api/alat/:id` | Hapus peralatan |
+| POST | /api/savings | Menambah catatan tabungan |
+| GET | /api/savings | Menampilkan semua catatan |
+| GET | /api/savings/:id | Menampilkan detail berdasarkan ID |
+| PUT | /api/savings/:id | Memperbarui catatan berdasarkan ID |
+| DELETE | /api/savings/:id | Menghapus catatan berdasarkan ID |
 
-Contoh body untuk POST:
+### Contoh body POST
+
 ```json
 {
-  "nama_alat": "Bola Basket",
-  "kategori": "Bola",
-  "stok": 10,
-  "harga": 150000
+  "saving_date": "2026-11-13",
+  "amount": 50000,
+  "notes": "Menabung harian"
 }
 ```
-Kirim request JSON dengan header `Content-Type: application/json`.
+
+### Pencarian dan pengurutan
+
+- Cari catatan: `GET /api/savings?search=harian`
+- Urutkan tanggal terbaru: `GET /api/savings?orderBy=saving_date&order=desc`
+- Urutkan jumlah terkecil: `GET /api/savings?orderBy=amount&order=asc`
+- Field pengurutan yang diizinkan: `saving_date`, `amount`, `notes`, dan `createdAt`.
+- Arah pengurutan: `asc` atau `desc`.
+
+Semua request POST dan PUT menggunakan header `Content-Type: application/json`.
+
+## Struktur project
+
+- `server.js`: konfigurasi Express dan koneksi MongoDB.
+- `models/Saving.js`: schema dan model Mongoose.
+- `routes/savingRoutes.js`: endpoint CRUD, pencarian, pengurutan, dan validasi Zod.
+- `middleware/requestLogger.js`: pencatatan waktu pemrosesan request.
+- `middleware/errorHandler.js`: format respons error JSON.
+
+## Catatan keamanan
+
+File `.env` berisi kredensial database dan tidak boleh di-commit. Gunakan `.env.example` sebagai template tanpa password asli.
