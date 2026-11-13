@@ -1,0 +1,88 @@
+{
+  "info": {
+    "name": "Catatan Tabungan API",
+    "description": "Pengujian endpoint REST API Catatan Tabungan",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:3000"
+    },
+    {
+      "key": "savingId",
+      "value": "GANTI_DENGAN_ID_MONGODB"
+    }
+  ],
+  "item": [
+    {
+      "name": "Tambah tabungan",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"saving_date\": \"2026-11-13\",\n  \"amount\": 50000,\n  \"notes\": \"Menabung harian\"\n}"
+        },
+        "url": "{{baseUrl}}/api/savings"
+      }
+    },
+    {
+      "name": "Lihat semua tabungan",
+      "request": {
+        "method": "GET",
+        "url": "{{baseUrl}}/api/savings"
+      }
+    },
+    {
+      "name": "Cari tabungan",
+      "request": {
+        "method": "GET",
+        "url": "{{baseUrl}}/api/savings?search=harian"
+      }
+    },
+    {
+      "name": "Urutkan tabungan",
+      "request": {
+        "method": "GET",
+        "url": "{{baseUrl}}/api/savings?orderBy=amount&order=asc"
+      }
+    },
+    {
+      "name": "Detail tabungan",
+      "request": {
+        "method": "GET",
+        "url": "{{baseUrl}}/api/savings/{{savingId}}"
+      }
+    },
+    {
+      "name": "Perbarui tabungan",
+      "request": {
+        "method": "PUT",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"amount\": 75000,\n  \"notes\": \"Tabungan diperbarui\"\n}"
+        },
+        "url": "{{baseUrl}}/api/savings/{{savingId}}"
+      }
+    },
+    {
+      "name": "Hapus tabungan",
+      "request": {
+        "method": "DELETE",
+        "url": "{{baseUrl}}/api/savings/{{savingId}}"
+      }
+    }
+  ]
+}
